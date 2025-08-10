@@ -1,17 +1,39 @@
-import Statsig from 'https://cdn.jsdelivr.net/npm/statsig-js/+esm';
+// main.js
+const CLIENT_SDK_KEY = 'client-REPLACE_ME';
 
-await Statsig.initialize('client-<YOUR_SDK_KEY>', {
-  userID: 'demo_user'
-});
-
-const config = await Statsig.getConfig('signup_form_config');
-document.getElementById('headline').innerText = config.getValue('titleText', 'Join Now');
-
-const showNewUI = await Statsig.checkGate('show_new_signup_ui');
-if (showNewUI) {
-  document.getElementById('headline').style.color = 'green';
+function getOrCreateUserID() {
+  let id = localStorage.getItem('statsig_demo_uid');
+  if (!id) {
+    id = 'test_user_' + Math.random().toString(36).slice(2, 8);
+    localStorage.setItem('statsig_demo_uid', id);
+  }
+  return id;
 }
 
-document.getElementById('cta-btn').addEventListener('click', () => {
-  Statsig.logEvent('signup_clicked', { source: 'landing_page' });
-});
+async function boot() {
+  // 1) Initialize
+  await statsig.initialize(CLIENT_SDK_KEY, {
+    userID: getOrCreateUserID(),
+    // Optional demo attrs you can target in gates/configs:
+    custom: { plan: 'free', locale: 'en-SG' },
+  });
+
+  // 2) Feature Gate
+  const showNewBanner = await statsig.checkGate('show_new_banner');
+  if (showNewBanner) {
+    document.getElementById('banner').style.display = 'block';
+  }
+
+  // 3) Dynamic Config
+  const config = await statsig.getConfig('banner_config');
+  const text = config.get('bannerText', 'Hello from default config');
+  document.getElementById('banner').textContent = text;
+
+  // 4) Custom Event
+  document.getElementById('cta-btn').addEventListener('click', () => {
+    statsig.logEvent('button_clicked', 'signup', { page: 'home' });
+    alert('Logged: button_clicked → signup');
+  });
+}
+
+boot().catch((e) => console.error('Statsig init failed', e));
