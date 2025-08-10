@@ -1,5 +1,5 @@
 // main.js
-const CLIENT_SDK_KEY = 'client-REPLACE_ME';
+const CLIENT_SDK_KEY = 'RsgziTxIu9WpzGuWumInkafTLU1XIAcW5cM1GAiB4TK';
 
 function getOrCreateUserID() {
   let id = localStorage.getItem('statsig_demo_uid');
