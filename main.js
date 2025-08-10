@@ -1,5 +1,5 @@
 // main.js
-const CLIENT_SDK_KEY = 'RsgziTxIu9WpzGuWumInkafTLU1XIAcW5cM1GAiB4TK';
+const CLIENT_SDK_KEY = 'client-RsgziTxIu9WpzGuWumInkafTLU1XIAcW5cM1GAiB4TK';
 
 // main.js (ES module is fine; Statsig is on window from the <script> tag)
 
