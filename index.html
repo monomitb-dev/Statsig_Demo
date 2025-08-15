@@ -1,14 +1,23 @@
-<!-- index.html -->
-<head>
-  <title>Statsig Demo</title>
-  <!-- exposes window.Statsig (no 'statsig' global) -->
-  <script src="https://cdn.jsdelivr.net/npm/@statsig/js-client@3/build/statsig-js-client+session-replay+web-analytics.min.js"
-          crossorigin="anonymous"></script>
-</head>
-<body>
-  ...
-  <script type="module" src="main.js"></script>
-</body>
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Statsig Demo (New Client)</title>
+    <!-- Exposes window.Statsig (no 'statsig' global) -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/@statsig/js-client@3/build/statsig-js-client+session-replay+web-analytics.min.js"
+      crossorigin="anonymous">
+    </script>
+  </head>
+  <body>
+    <h1 id="headline">Welcome!</h1>
+    <div id="banner" style="display:none;"></div>
+    <button id="cta-btn">Sign Up</button>
+
+    <!-- Your app code -->
+    <script type="module" src="main.js"></script>
+  </body>
+</html>
 
 
 
