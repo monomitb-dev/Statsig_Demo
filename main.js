@@ -2,7 +2,25 @@ const CLIENT_SDK_KEY = 'client-RsgziTxIu9WpzGuWumInkafTLU1XIAcW5cM1GAiB4TK';
 const GATE_NAME = 'show_new_banner';
 const CONFIG_NAME = 'banner_config';
 
-function getOrCreateUserID() {
+import { StatsigClient } from '@statsig/js-client'
+import { StatsigSessionReplayPlugin } from '@statsig/session-replay';
+import { StatsigAutoCapturePlugin } from '@statsig/web-analytics';
+
+const myStatsigClient = new StatsigClient(
+  "client-RsgziTxIu9WpzGuWumInkafTLU1XIAcW5cM1GAiB4TK", 
+  { userID: "user-id" },
+  {
+    plugins: [
+      new StatsigSessionReplayPlugin(),
+      new StatsigAutoCapturePlugin(),
+    ],
+  }
+);
+
+await myStatsigClient.initializeAsync();
+
+
+/*function getOrCreateUserID() {
   let id = localStorage.getItem('statsig_demo_uid');
   if (!id) {
     id = 'test_user_' + Math.random().toString(36).slice(2, 8);
@@ -64,7 +82,7 @@ async function boot() {
     gate: { name: GATE_NAME, value: showNewBanner },
     bannerText,
   });
-}
+}*/
 
 boot().catch((e) => {
   console.error('Statsig bootstrap failed:', e);
