@@ -7,11 +7,11 @@ const GATE_NAME = 'show_new_banner';
 const CONFIG_NAME = 'banner_config';
 
 function getOrCreateUserID() {
- // let id = localStorage.getItem('statsig_demo_uid');
- // if (!id) {
+  let id = localStorage.getItem('statsig_demo_uid');
+  if (!id) {
     id = 'test_user_' + Math.random().toString(36).slice(2, 8);
-  //  localStorage.setItem('statsig_demo_uid', id);
- // }
+    localStorage.setItem('statsig_demo_uid', id);
+  }
   return id;
 }
 
