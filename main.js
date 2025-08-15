@@ -1,11 +1,9 @@
-// main.js
+// --- Config ---
 const CLIENT_SDK_KEY = 'client-RsgziTxIu9WpzGuWumInkafTLU1XIAcW5cM1GAiB4TK';
-
-// main.js (ES module is fine; Statsig is on window from the <script> tag)
-
 const GATE_NAME = 'show_new_banner';
 const CONFIG_NAME = 'banner_config';
 
+// --- Helpers ---
 function getOrCreateUserID() {
   let id = localStorage.getItem('statsig_demo_uid');
   if (!id) {
@@ -14,29 +12,38 @@ function getOrCreateUserID() {
   }
   return id;
 }
-
 function $(id) {
   const el = document.getElementById(id);
   if (!el) throw new Error(`#${id} not found in DOM`);
   return el;
 }
 
+// --- Boot ---
 async function boot() {
-  // 1) Initialize
-  await statsig.initialize(CLIENT_SDK_KEY, {
-    userID: getOrCreateUserID(),
-    custom: { plan: 'free', locale: 'en-SG' }, // example attributes
-  });
+  const { StatsigClient, runStatsigAutoCapture, runStatsigSessionReplay } = window.Statsig;
 
-  // 2) Feature Gate (boolean)
-  const showNewBanner = statsig.checkGate(GATE_NAME);
+  // Create a client instance
+  const client = new StatsigClient(
+    CLIENT_SDK_KEY,
+    { userID: getOrCreateUserID(), custom: { plan: 'free', locale: 'en-SG' } }
+  );
 
-  // 3) Dynamic Config (key/value)
-  const cfg = statsig.getConfig(CONFIG_NAME);
+  // (optional) enable built-ins
+  runStatsigSessionReplay(client);
+  runStatsigAutoCapture(client);
+
+  // Initialize (awaited strategy)
+  await client.initializeAsync();
+
+  // Feature Gate
+  const showNewBanner = client.checkGate(GATE_NAME);
+
+  // Dynamic Config (get() with typed fallback recommended)
+  const cfg = client.getConfig(CONFIG_NAME); // or client.getDynamicConfig(...)
   const bannerText = cfg.get('bannerText', 'Hello from default config');
 
   // Apply UI
-  const banner = $('banner'); // make sure <div id="banner"> exists
+  const banner = $('banner');
   if (showNewBanner) {
     banner.style.display = 'block';
     banner.textContent = bannerText;
@@ -44,18 +51,18 @@ async function boot() {
     banner.style.display = 'none';
   }
 
-  // 4) Custom Event
+  // Custom Event
   $('cta-btn').addEventListener('click', () => {
-    statsig.logEvent('button_clicked', 'signup', {
+    client.logEvent('button_clicked', 'signup', {
       page: 'home',
       gate_passed: showNewBanner,
     });
     alert('Logged event: button_clicked → signup');
   });
 
-  // (Optional) Debug to console so you can verify values quickly
+  // Debug
   console.log({
-    userID: statsig.getCurrentUser()?.userID,
+    userID: client.getCurrentUser()?.userID,
     gate: { name: GATE_NAME, value: showNewBanner },
     bannerText,
   });
