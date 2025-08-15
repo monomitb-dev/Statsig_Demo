@@ -1,7 +1,14 @@
-<!-- New JS client (do NOT put apikey in the URL if you'll init manually) -->
-<script
-  src="https://cdn.jsdelivr.net/npm/@statsig/js-client@3/build/statsig-js-client+session-replay+web-analytics.min.js"
-  crossorigin="anonymous">
-</script>
+<!-- index.html -->
+<head>
+  <title>Statsig Demo</title>
+  <!-- exposes window.Statsig (no 'statsig' global) -->
+  <script src="https://cdn.jsdelivr.net/npm/@statsig/js-client@3/build/statsig-js-client+session-replay+web-analytics.min.js"
+          crossorigin="anonymous"></script>
+</head>
+<body>
+  ...
+  <script type="module" src="main.js"></script>
+</body>
+
 
 
