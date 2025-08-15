@@ -11,7 +11,7 @@ function getOrCreateUserID() {
  // if (!id) {
     id = 'test_user_' + Math.random().toString(36).slice(2, 8);
   //  localStorage.setItem('statsig_demo_uid', id);
-  }
+ // }
   return id;
 }
 
